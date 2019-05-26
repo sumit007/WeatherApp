@@ -5,6 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#F5F6F7"
+        android:fillViewport="true"
         tools:context=".MainActivity">
 
     <RelativeLayout android:layout_width="match_parent"
@@ -21,7 +22,6 @@
         <include android:id="@+id/forecast_view"
                  android:visibility="gone"
                  layout="@layout/weather_forecast_layout"/>
-
     </RelativeLayout>
 
 </android.support.v4.widget.NestedScrollView>

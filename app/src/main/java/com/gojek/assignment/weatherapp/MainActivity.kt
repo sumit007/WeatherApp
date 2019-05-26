@@ -19,10 +19,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.weather_forecast_layout.*
 import android.view.animation.AnimationUtils
 import android.support.v7.widget.DividerItemDecoration
+import android.view.animation.TranslateAnimation
 
 
-
-
+/**
+ * Created by Sumit on 2019-05-25.
+ *
+ */
 
 
 class MainActivity : AppCompatActivity() {
@@ -65,6 +68,8 @@ class MainActivity : AppCompatActivity() {
             layoutManager = linearLayout
 
         }
+
+        forecast_weather_rv.visibility = View.GONE
 
         checkPermissions()
     }
@@ -125,6 +130,17 @@ class MainActivity : AppCompatActivity() {
         forecast_weather_rv.adapter = weatherForecastAdapter
 
         forecast_weather_rv.visibility = View.VISIBLE
+
+        val animate = TranslateAnimation(
+            0f,
+            0f,
+            forecast_weather_rv.height.toFloat(),
+            0f
+        )
+        animate.duration = 1500
+        animate.fillAfter = true
+        forecast_weather_rv.startAnimation(animate)
+
     }
 
     private fun getLastLocation() {
