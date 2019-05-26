@@ -1,6 +1,8 @@
 package com.gojek.assignment.weatherapp
 
 import android.Manifest
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.pm.PackageManager
 import android.location.Location
 import android.support.v7.app.AppCompatActivity
@@ -8,16 +10,21 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
+import android.view.View
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnSuccessListener
-
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.forescast_item_layout.*
+import kotlinx.android.synthetic.main.weather_forecast_layout.*
 
 
 class MainActivity : AppCompatActivity() {
 
     private var fusedLocationClient: FusedLocationProviderClient? = null
-    private var mLocation : Location? = null;
+    private lateinit var forecastViewModel: ForecastViewModel
 
 
     companion object {
@@ -29,9 +36,61 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        //actionBar.visi
-
         getLastLocation()
+
+        forecastViewModel = ViewModelProviders.of(this, InjectionUtils.getLoginViewModelFactory()).get(ForecastViewModel::class.java)
+
+        forecast_weather_rv.apply {
+            setHasFixedSize(true)
+            val linearLayout = LinearLayoutManager(context)
+            layoutManager = linearLayout
+
+        }
+    }
+
+    private fun forecastWeather(location: Location) {
+
+        val latLng = "" + location.latitude + "," + location.longitude
+
+        forecastViewModel.getForecast(latLng).observe(this, Observer<WeatherForecastModel> { weatherForecast ->
+            Log.i("MainActivity", "string $weatherForecast")
+
+            if (weatherForecast != null) {
+                setForecastAdapter(weatherForecast)
+
+            } else {
+                showError()
+
+            }
+
+        })
+    }
+
+    private fun showError() {
+        forecast_view.visibility = View.GONE
+        progress_view.visibility = View.GONE
+        error_view.visibility = View.VISIBLE
+    }
+
+    private fun showLoading() {
+        forecast_view.visibility = View.GONE
+        progress_view.visibility = View.VISIBLE
+        error_view.visibility = View.GONE
+    }
+
+    private fun showWeatherForecast(weatherForecastModel: WeatherForecastModel) {
+
+        temp_forecast_tv.text = weatherForecastModel.current.tempC.toString()
+        city_tv.text = weatherForecastModel.location.name
+
+        forecast_view.visibility = View.VISIBLE
+        progress_view.visibility = View.GONE
+        error_view.visibility = View.GONE
+    }
+
+    private fun setForecastAdapter(weatherForecastModel: WeatherForecastModel) {
+        val weatherForecastAdapter = WeatherForecastAdapter(weatherForecastModel.forecast.forecastday)
+        forecast_weather_rv.adapter = weatherForecastAdapter
     }
 
     private fun getLastLocation() {
@@ -43,7 +102,7 @@ class MainActivity : AppCompatActivity() {
                     // Got last known location. In some rare situations this can be null.
                     if (location != null) {
                         // Logic to handle location object
-                        mLocation = location
+                        forecastWeather(location)
 
                     }
                 }

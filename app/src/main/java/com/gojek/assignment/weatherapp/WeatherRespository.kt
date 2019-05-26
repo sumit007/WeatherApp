@@ -46,8 +46,8 @@ class WeatherRespository : Callback<WeatherForecastModel> {
         weatherForecastApi = retrofit.create(WeatherForecastApi::class.java)
     }
 
-    fun getWeatheatherForecast() : LiveData<WeatherForecastModel> {
-        weatherForecastApi.forecastWeather("5f7cbf27b5684e99a8c72423181912", "12.98,77", 4)
+    fun getWeatheatherForecast(latLng: String) : LiveData<WeatherForecastModel> {
+        weatherForecastApi.forecastWeather("5f7cbf27b5684e99a8c72423181912", latLng, 4)
         return weatherForecast
     }
 

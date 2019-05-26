@@ -11,8 +11,8 @@ import android.arch.lifecycle.ViewModel
 
 class ForecastViewModel(private val weatherRepository: WeatherRespository) : ViewModel() {
 
-    fun getForecast() : LiveData<WeatherForecastModel> {
-        return weatherRepository.getWeatheatherForecast()
+    fun getForecast(latLng: String) : LiveData<WeatherForecastModel> {
+        return weatherRepository.getWeatheatherForecast(latLng)
     }
 
     fun getNetworkStatus() : LiveData<NetworkStatus> {

@@ -12,7 +12,7 @@ import android.widget.TextView
  */
 
 
-class WeatherForecastAdapter(private val forecastDays: ArrayList<WeatherForecastModel.Forecast.Forecastday>) : RecyclerView.Adapter<WeatherForecastAdapter.WeatherForecastHolder>() {
+class WeatherForecastAdapter(private val forecastDays: List<WeatherForecastModel.Forecast.Forecastday>) : RecyclerView.Adapter<WeatherForecastAdapter.WeatherForecastHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): WeatherForecastHolder {
         val itemView = LayoutInflater.from(viewGroup.context).inflate(R.layout.forescast_item_layout, viewGroup)

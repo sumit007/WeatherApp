@@ -9,9 +9,9 @@ import android.arch.lifecycle.ViewModelProvider
  */
 
 
-class ForecastViewModelFactory(private val respository: WeatherRespository) : ViewModelProvider.Factory {
+class ForecastViewModelFactory(private val repository: WeatherRespository) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return ForecastViewModel(respository) as T
+        return ForecastViewModel(repository) as T
     }
 }
