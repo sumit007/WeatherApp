@@ -1,6 +1,7 @@
 package com.gojek.assignment.weatherapp
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 
 /**
@@ -11,7 +12,7 @@ import android.arch.lifecycle.ViewModel
 
 class ForecastViewModel(private val weatherRepository: WeatherRespository) : ViewModel() {
 
-    fun getForecast(latLng: String) : LiveData<WeatherForecastModel> {
+    fun getForecast(latLng: String) : MutableLiveData<WeatherForecastModel> {
         return weatherRepository.getWeatheatherForecast(latLng)
     }
 

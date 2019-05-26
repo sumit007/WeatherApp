@@ -15,10 +15,12 @@ import android.util.Log
 import android.view.View
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.OnSuccessListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.forescast_item_layout.*
 import kotlinx.android.synthetic.main.weather_forecast_layout.*
+import android.view.animation.AnimationUtils
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -40,12 +42,29 @@ class MainActivity : AppCompatActivity() {
 
         forecastViewModel = ViewModelProviders.of(this, InjectionUtils.getLoginViewModelFactory()).get(ForecastViewModel::class.java)
 
+        forecastViewModel.getNetworkStatus().observe(this, Observer {
+            when (it) {
+                NetworkStatus.ERROR -> {
+                    showError()
+                }
+                NetworkStatus.LOADING -> {
+                    showLoading()
+                }
+                else -> {
+                    Log.d("MainActivity", "Network request success")
+                    showForecast()
+                }
+            }
+        })
+
         forecast_weather_rv.apply {
             setHasFixedSize(true)
             val linearLayout = LinearLayoutManager(context)
             layoutManager = linearLayout
 
         }
+
+        checkPermissions()
     }
 
     private fun forecastWeather(location: Location) {
@@ -56,6 +75,7 @@ class MainActivity : AppCompatActivity() {
             Log.i("MainActivity", "string $weatherForecast")
 
             if (weatherForecast != null) {
+                showWeatherForecast(weatherForecast)
                 setForecastAdapter(weatherForecast)
 
             } else {
@@ -78,17 +98,24 @@ class MainActivity : AppCompatActivity() {
         error_view.visibility = View.GONE
     }
 
-    private fun showWeatherForecast(weatherForecastModel: WeatherForecastModel) {
-
-        temp_forecast_tv.text = weatherForecastModel.current.tempC.toString()
-        city_tv.text = weatherForecastModel.location.name
-
+    private fun showForecast() {
         forecast_view.visibility = View.VISIBLE
         progress_view.visibility = View.GONE
         error_view.visibility = View.GONE
     }
 
+    private fun showWeatherForecast(weatherForecastModel: WeatherForecastModel) {
+
+        today_temp_tv.text = weatherForecastModel.current.tempC.toString()
+        city_tv.text = weatherForecastModel.location.name
+
+    }
+
     private fun setForecastAdapter(weatherForecastModel: WeatherForecastModel) {
+
+        val animation = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation_from_bottom)
+        forecast_weather_rv.layoutAnimation = animation
+
         val weatherForecastAdapter = WeatherForecastAdapter(weatherForecastModel.forecast.forecastday)
         forecast_weather_rv.adapter = weatherForecastAdapter
     }
@@ -96,7 +123,7 @@ class MainActivity : AppCompatActivity() {
     private fun getLastLocation() {
 
         if (ContextCompat.checkSelfPermission(this@MainActivity,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient?.lastLocation
                 ?.addOnSuccessListener(this) { location ->
                     // Got last known location. In some rare situations this can be null.
@@ -107,8 +134,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-        } else {
-            checkPermissions()
         }
     }
 

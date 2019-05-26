@@ -12,7 +12,7 @@ import retrofit2.http.Query
 
 interface WeatherForecastApi {
 
-    @GET("v1/forecast.json")
+    @GET("forecast.json")
     fun forecastWeather(
         @Query("key") key: String,
         @Query("q") latLng: String,

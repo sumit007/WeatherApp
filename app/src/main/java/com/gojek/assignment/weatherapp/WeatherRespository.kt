@@ -3,6 +3,9 @@ package com.gojek.assignment.weatherapp
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
+import com.google.gson.GsonBuilder
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,20 +41,32 @@ class WeatherRespository : Callback<WeatherForecastModel> {
     private val weatherForecastApi: WeatherForecastApi
 
     init {
+
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
+
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://www.reddit.com")
+            .client(client)
+            .baseUrl("https://api.apixu.com/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         weatherForecastApi = retrofit.create(WeatherForecastApi::class.java)
     }
 
-    fun getWeatheatherForecast(latLng: String) : LiveData<WeatherForecastModel> {
-        weatherForecastApi.forecastWeather("5f7cbf27b5684e99a8c72423181912", latLng, 4)
+    fun getWeatheatherForecast(latLng: String) : MutableLiveData<WeatherForecastModel> {
+        networkStatus.postValue(NetworkStatus.LOADING)
+        val call = weatherForecastApi.forecastWeather("5f7cbf27b5684e99a8c72423181912", latLng, 4)
+        call.enqueue(this)
         return weatherForecast
     }
 
-    fun getNetworkStatus() : LiveData<NetworkStatus> {
+    fun getNetworkStatus() : MutableLiveData<NetworkStatus> {
         return networkStatus
     }
 
