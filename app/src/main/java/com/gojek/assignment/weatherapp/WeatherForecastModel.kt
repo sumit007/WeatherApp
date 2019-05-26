@@ -83,7 +83,7 @@ data class WeatherForecastModel(
             fun getDayOfForecast() : String {
                 val dayNames = DateFormatSymbols().weekdays
                 val calendar = Calendar.getInstance()
-                calendar.timeInMillis = dateEpoch
+                calendar.timeInMillis = dateEpoch  * 1000
                 return dayNames[calendar.get(Calendar.DAY_OF_WEEK)]
             }
         }

@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showWeatherForecast(weatherForecastModel: WeatherForecastModel) {
 
-        today_temp_tv.text = weatherForecastModel.current.tempC.toString()
+        today_temp_tv.text = getString(R.string.degree_celcious, weatherForecastModel.current.tempC)
         city_tv.text = weatherForecastModel.location.name
 
     }

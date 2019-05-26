@@ -27,7 +27,8 @@ class WeatherForecastAdapter(private val forecastDays: List<WeatherForecastModel
 
         val forecastday = forecastDays[itemId]
         weatherHolder.dayNameTv?.text = forecastday.getDayOfForecast()
-        weatherHolder.temperatureTv?.text = forecastday.day.avgtempC.toString()
+        weatherHolder.temperatureTv?.text = weatherHolder.temperatureTv?.context?.
+            getString(R.string.degree_celcious, forecastday.day.avgtempC)
     }
 
     class WeatherForecastHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
