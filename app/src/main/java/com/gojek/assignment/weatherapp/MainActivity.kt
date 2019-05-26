@@ -16,9 +16,11 @@ import android.view.View
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.forescast_item_layout.*
 import kotlinx.android.synthetic.main.weather_forecast_layout.*
 import android.view.animation.AnimationUtils
+import android.support.v7.widget.DividerItemDecoration
+
+
 
 
 
@@ -116,8 +118,13 @@ class MainActivity : AppCompatActivity() {
         val animation = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation_from_bottom)
         forecast_weather_rv.layoutAnimation = animation
 
+        val decoration = DividerItemDecoration(applicationContext, DividerItemDecoration.VERTICAL)
+        forecast_weather_rv.addItemDecoration(decoration)
+
         val weatherForecastAdapter = WeatherForecastAdapter(weatherForecastModel.forecast.forecastday)
         forecast_weather_rv.adapter = weatherForecastAdapter
+
+        forecast_weather_rv.visibility = View.VISIBLE
     }
 
     private fun getLastLocation() {

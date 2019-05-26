@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.v4.widget.NestedScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#F5F6F7"
         tools:context=".MainActivity">
 
-    <include android:id="@+id/error_view"
-             android:visibility="gone"
-            layout="@layout/error_layout"/>
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-    <include android:id="@+id/progress_view"
-             android:visibility="gone"
-            layout="@layout/progress_spinner_layout"/>
+        <include android:id="@+id/error_view"
+                 android:visibility="gone"
+                 layout="@layout/error_layout"/>
 
-    <include android:id="@+id/forecast_view"
-             android:visibility="gone"
-            layout="@layout/weather_forecast_layout"/>
+        <include android:id="@+id/progress_view"
+                 android:visibility="gone"
+                 layout="@layout/progress_spinner_layout"/>
 
+        <include android:id="@+id/forecast_view"
+                 android:visibility="gone"
+                 layout="@layout/weather_forecast_layout"/>
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</android.support.v4.widget.NestedScrollView>
